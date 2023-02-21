@@ -1,0 +1,8 @@
+.batches{
+    width: 100%;
+    outline: none;
+    background-color: #3f3f3f;
+    color: #eee;
+    cursor: pointer;
+    /* border: 0; */
+}
