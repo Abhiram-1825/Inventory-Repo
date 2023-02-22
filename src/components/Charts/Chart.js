@@ -8,7 +8,7 @@ import {
     Tooltip,
     Legend,
 } from "recharts";
-import styles from './Charts.module.css';
+import styles from './Chart.module.css';
 
 
 const Charts = (props) => {

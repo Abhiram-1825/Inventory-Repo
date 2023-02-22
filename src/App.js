@@ -14,7 +14,7 @@ const App = () => {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         setInventoryData(jsonData);
     };
-    console.log(inventoryData);
+    // console.log(inventoryData);
     const inputChangeHandler = (event) => {
         setSearchText(event.target.value);
     };

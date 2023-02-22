@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
 import TableRowData from "./TableRowData";
 import styles from "./Table.module.css";
-import Charts from "./Charts";
+import Charts from "./Charts/Charts";
 import Pagination from "./Pagination";
+
+const ExcelDateToJSDate = (serial) => {
+    const utc_days = Math.floor(serial - 25569);
+    const utc_value = utc_days * 86400;
+    const date_info = new Date(utc_value * 1000);
+
+    return `${date_info.getDate()}-${
+        +date_info.getMonth() + 1
+    }-${date_info.getFullYear()}`;
+};
 
 const Table = (props) => {
     const groupedData = {};
@@ -19,7 +29,7 @@ const Table = (props) => {
                 free: +record.deal,
                 mrp: record.mrp,
                 rate: record.rate,
-                exp: record.exp,
+                exp: ExcelDateToJSDate(record.exp),
                 company: record.company,
             };
         } else {
@@ -42,13 +52,16 @@ const Table = (props) => {
                 company: groupedData[key].company,
             };
         }
-        groupedData[key][batch] = { ...record };
+        groupedData[key][batch] = {
+            ...record,
+            exp: ExcelDateToJSDate(record.exp),
+        };
     }
     const groupedDataArray = [];
     for (const groupRecord in groupedData) {
         groupedDataArray.push(groupedData[groupRecord]);
     }
-    
+
     const [filteredData, setFilteredData] = useState(groupedDataArray);
     const [currentPage, setCurrentPage] = useState("1");
     const noOfRecordsPerPage = 20;
@@ -66,48 +79,19 @@ const Table = (props) => {
         indexOfFirstRecord,
         indexOfLastRecord
     );
-        
 
-    console.log(filteredData, currentRecords);
     const nPages = Math.ceil(groupedDataArray.length / noOfRecordsPerPage);
     const setPageHandller = (pgNo) => {
         setCurrentPage(+pgNo);
     };
 
-    const stockRecords = currentRecords.map((record) => {
-        return {
-            name: record.name,
-            stock: record.stock,
-        };
-    });
-    const mrpRecords = currentRecords.map((record) => {
-        return {
-            name: record.name,
-            mrp: record.mrp,
-        };
-    });
-    const rateRecords = currentRecords.map((record) => {
-        return {
-            name: record.name,
-            rate: record.rate,
-        };
-    });
     return (
         <React.Fragment>
             <div className={styles["inventory-table"]}>
                 <div className={styles.charts}>
-                    <h2>Charts</h2>
-                    <div className={styles.chart}>
-                        <Charts data={stockRecords} dataKey="stock" />
-                    </div>
-                    <div className={styles.chart}>
-                        <Charts data={mrpRecords} dataKey="mrp" />
-                    </div>
-                    <div className={styles.chart}>
-                        <Charts data={rateRecords} dataKey="rate" />
-                    </div>
+                    <Charts data={currentRecords} />
                 </div>
-                <div>
+                <div className={styles.table}>
                     <table>
                         <thead>
                             <tr>

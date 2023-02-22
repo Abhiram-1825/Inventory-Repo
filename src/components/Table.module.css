@@ -1,3 +1,17 @@
+@media only screen and (max-width:768px){
+    .charts{
+        opacity: 0;
+    }
+    .inventory-table .table{
+        font-size: small;
+        padding: 4px;
+        margin-left: 28px;
+    }
+    .inventory-table h2{
+        font-size: medium;
+    }
+}
+
 .inventory-table {
     width: 100%;
     display: flex;
@@ -8,16 +22,6 @@
 .inventory-table .charts {
     display: flex;
     flex-direction: column;
-}
-
-.charts h2 {
-    text-align: center;
-    color: #eee;
-    font-family: "Courier New", Courier, monospace;
-}
-
-.charts .chart {
-    margin-top: 18px;
 }
 
 .paginate {
