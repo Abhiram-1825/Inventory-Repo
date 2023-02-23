@@ -62,25 +62,23 @@ const Table = (props) => {
         groupedDataArray.push(groupedData[groupRecord]);
     }
 
-    const [filteredData, setFilteredData] = useState(groupedDataArray);
     const [currentPage, setCurrentPage] = useState("1");
     const noOfRecordsPerPage = 20;
-
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [props.inputText]);
     const indexOfLastRecord = +currentPage * noOfRecordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - noOfRecordsPerPage;
-    useEffect(() => {
-        setFilteredData(
-            groupedDataArray.filter((record) =>
-                record.name.includes(props.inputText)
-            )
-        );
-    }, [props.inputText]);
+
+    const filteredData = groupedDataArray.filter((record) =>
+        record.name.includes(props.inputText)
+    );
+    const nPages = Math.ceil(filteredData.length / noOfRecordsPerPage);
     const currentRecords = filteredData.slice(
         indexOfFirstRecord,
         indexOfLastRecord
     );
 
-    const nPages = Math.ceil(groupedDataArray.length / noOfRecordsPerPage);
     const setPageHandller = (pgNo) => {
         setCurrentPage(+pgNo);
     };
@@ -92,31 +90,35 @@ const Table = (props) => {
                     <Charts data={currentRecords} />
                 </div>
                 <div className={styles.table}>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Batch</th>
-                                <th>Stock</th>
-                                <th>Deal</th>
-                                <th>Free</th>
-                                <th>MRP</th>
-                                <th>Rate</th>
-                                <th>Exp.</th>
-                                <th>Company</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentRecords.map((record) => {
-                                return (
-                                    <TableRowData
-                                        key={Math.random().toString()}
-                                        data={record}
-                                    />
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                    {currentRecords.length === 0 ? (
+                        <h3>No Records Found</h3>
+                    ) : (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Batch</th>
+                                    <th>Stock</th>
+                                    <th>Deal</th>
+                                    <th>Free</th>
+                                    <th>MRP</th>
+                                    <th>Rate</th>
+                                    <th>Exp.</th>
+                                    <th>Company</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentRecords.map((record) => {
+                                    return (
+                                        <TableRowData
+                                            key={Math.random().toString()}
+                                            data={record}
+                                        />
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
             <div className={styles.paginate}>
