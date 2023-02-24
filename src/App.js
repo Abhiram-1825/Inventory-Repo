@@ -14,28 +14,31 @@ const App = () => {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         setInventoryData(jsonData);
     };
-    const inputChangeHandler = (event) => {
-        setSearchText(event.target.value);
-    };
-
     return (
-        <React.Fragment>
+        <>
             <Input onFileUpload={fileUploadHanlder} />
             {!inventoryData && (
                 <p className={styles.record}> No Records Found</p>
             )}
             {inventoryData && (
-                <div className={styles.header}>
-                    <h2>Inventory Records</h2>
-                    <input
-                        type="search"
-                        placeholder="Search by name..."
-                        onChange={inputChangeHandler}
+                <>
+                    <div className={styles.header}>
+                        <h2>Inventory Records</h2>
+                        <input
+                            type="search"
+                            placeholder="Search by name..."
+                            onChange={(e) => {
+                                setSearchText(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <Table
+                        inventoryRecords={inventoryData}
+                        searchText={searchText}
                     />
-                </div>
+                </>
             )}
-            {inventoryData && <Table inventoryRecords={inventoryData} inputText={searchText} />}
-        </React.Fragment>
+        </>
     );
 };
 

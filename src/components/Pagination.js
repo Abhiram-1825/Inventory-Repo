@@ -1,15 +1,11 @@
 import React from "react";
-import styles from './Pagination.module.css';
+import styles from "./Pagination.module.css";
 
 const Pagination = (props) => {
     const numPages = props.noOfPages;
     const currentPage = +props.currPage;
     const maxPageNumbers = 10;
     const pageNumbers = [...Array(props.noOfPages + 1).keys()].slice(1);
-    const handlePageChange = (event) => {
-        const pageNumber = Number(event.target.textContent);
-        props.setCurrPage(pageNumber);
-    };
     const getDisplayedPageNumbers = () => {
         let start = 0;
         let end = 0;
@@ -24,17 +20,8 @@ const Pagination = (props) => {
             end = currentPage + Math.floor(maxPageNumbers / 2);
         }
 
-        // Add ellipsis if there are more pages
-        if (start > 0) {
-            pageNumbers.splice(0, 0, "...");
-        }
-        if (end < numPages - 1) {
-            pageNumbers.push("...");
-        }
-
-        // Return the page numbers to display
         return pageNumbers.slice(start, end + 1);
-    }
+    };
 
     const displayedPageNumbers = getDisplayedPageNumbers();
 
@@ -64,7 +51,9 @@ const Pagination = (props) => {
                     >
                         <button
                             className="page-link"
-                            onClick={handlePageChange}
+                            onClick={(e) =>
+                                props.setCurrPage(+e.target.textContent)
+                            }
                         >
                             {pageNumber}
                         </button>

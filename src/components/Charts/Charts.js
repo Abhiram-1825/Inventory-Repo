@@ -1,40 +1,33 @@
-import React from 'react';
-import styles from './Charts.module.css';
-import Chart from './Chart';
+import React from "react";
+import styles from "./Charts.module.css";
+import Chart from "./Chart";
 
 const Charts = (props) => {
-    const stockRecords = props.data.map((record) => {
-        return {
-            name: record.name,
-            stock: record.stock,
-        };
-    });
-    const mrpRecords = props.data.map((record) => {
-        return {
-            name: record.name,
-            mrp: record.mrp,
-        };
-    });
-    const rateRecords = props.data.map((record) => {
-        return {
-            name: record.name,
-            rate: record.rate,
-        };
-    });
-  return (
-      <React.Fragment>
-          <h2>Chart</h2>
-          <div className={styles.chart}>
-              <Chart data={stockRecords} dataKey="stock" />
-          </div>
-          <div className={styles.chart}>
-              <Chart data={mrpRecords} dataKey="mrp" />
-          </div>
-          <div className={styles.chart}>
-              <Chart data={rateRecords} dataKey="rate" />
-          </div>
-      </React.Fragment>
-  );
-}
+    const chartMetrics = ["stock", "mrp", "rate"];
+    const chartDataList = [];
+    for (const metric of chartMetrics) {
+        const dataRecord = props.data.map((record) => {
+            return {
+                name: record.name,
+                [metric]: record[metric],
+            };
+        });
+        chartDataList.push(dataRecord);
+    }
+    return (
+        <>
+            <h2>Charts</h2>
+            <div className={styles.chart}>
+                {chartDataList.map((data , idx) => (
+                    <Chart
+                        data={data}
+                        dataKey={Object.keys(data[0])[1]}
+                        key={idx}
+                    />
+                ))}
+            </div>
+        </>
+    );
+};
 
 export default Charts;
