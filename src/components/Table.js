@@ -6,8 +6,6 @@ import Pagination from "./Pagination";
 
 const ExcelDateToJSDate = (serial) => {
     const date_info = new Date(Date.UTC(0, 0, serial - 1));
-    console.log(date_info);
-    console.log(new Date(Date.UTC(0, 0, serial - 1)).toISOString());
     return `${date_info.getDate()}-${
         +date_info.getMonth() + 1
     }-${date_info.getFullYear()}`;
@@ -79,11 +77,7 @@ const Table = (props) => {
         indexOfFirstRecord,
         indexOfLastRecord
     );
-
-    const setPageHandller = (pgNo) => {
-        setCurrentPage(+pgNo);
-    };
-
+    
     return (
         <React.Fragment>
             {currentRecords.length === 0 ? (
@@ -127,7 +121,7 @@ const Table = (props) => {
                     <Pagination
                         noOfPages={noOfPages}
                         currPage={currentPage}
-                        setCurrPage={setPageHandller}
+                        setCurrPage={(pageNo) => setCurrentPage(pageNo)}
                         className={styles["page-holder"]}
                     />
                 </div>
