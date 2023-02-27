@@ -79,7 +79,7 @@ const Table = (props) => {
     );
     
     return (
-        <React.Fragment>
+        <>
             {currentRecords.length === 0 ? (
                 <h3>No Records Found</h3>
             ) : (
@@ -106,7 +106,7 @@ const Table = (props) => {
                                 {currentRecords.map((record) => {
                                     return (
                                         <TableRowData
-                                            key={Math.random().toString()}
+                                            key={record.name}
                                             data={record}
                                         />
                                     );
@@ -126,7 +126,7 @@ const Table = (props) => {
                     />
                 </div>
             )}
-        </React.Fragment>
+        </>
     );
 };
 
