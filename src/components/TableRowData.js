@@ -8,7 +8,7 @@ const TableRowData = (props) => {
         return (
             <option
                 value={props.data.batches[index]}
-                key={Math.random().toString()}
+                key={index}
             >
                 {props.data.batches[index]}
             </option>

@@ -47,6 +47,8 @@ th {
     text-align: center;
 }
 
-.table h3{
+h3{
     color: #eee;
+    margin-top: 80px;
+    text-align: center;
 }

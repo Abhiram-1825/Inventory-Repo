@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TableRowData from "./TableRowData";
 import styles from "./Table.module.css";
 import Charts from "./Charts/Charts";
 import Pagination from "./Pagination";
 
 const ExcelDateToJSDate = (serial) => {
-    const utc_days = Math.floor(serial - 25569);
-    const utc_value = utc_days * 86400;
-    const date_info = new Date(utc_value * 1000);
-
+    const date_info = new Date(Date.UTC(0, 0, serial - 1));
     return `${date_info.getDate()}-${
         +date_info.getMonth() + 1
     }-${date_info.getFullYear()}`;
@@ -17,7 +14,6 @@ const ExcelDateToJSDate = (serial) => {
 const Table = (props) => {
     const groupedData = {};
     for (const record of props.inventoryRecords) {
-        // console.log(record);
         let batch = record.batch;
         let key = record.code;
         if (!groupedData.hasOwnProperty(key)) {
@@ -66,33 +62,32 @@ const Table = (props) => {
     const noOfRecordsPerPage = 20;
     useEffect(() => {
         setCurrentPage(1);
-    }, [props.inputText]);
+    }, [props.searchText]);
     const indexOfLastRecord = +currentPage * noOfRecordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - noOfRecordsPerPage;
 
-    const filteredData = groupedDataArray.filter((record) =>
-        record.name.includes(props.inputText)
-    );
-    const nPages = Math.ceil(filteredData.length / noOfRecordsPerPage);
+    const filteredData = useMemo(() => {
+        return groupedDataArray.filter((record) =>
+            record.name.includes(props.searchText)
+        );
+    }, [props.searchText]);
+
+    const noOfPages = Math.ceil(filteredData.length / noOfRecordsPerPage);
     const currentRecords = filteredData.slice(
         indexOfFirstRecord,
         indexOfLastRecord
     );
-
-    const setPageHandller = (pgNo) => {
-        setCurrentPage(+pgNo);
-    };
-
+    
     return (
-        <React.Fragment>
-            <div className={styles["inventory-table"]}>
-                <div className={styles.charts}>
-                    <Charts data={currentRecords} />
-                </div>
-                <div className={styles.table}>
-                    {currentRecords.length === 0 ? (
-                        <h3>No Records Found</h3>
-                    ) : (
+        <>
+            {currentRecords.length === 0 ? (
+                <h3>No Records Found</h3>
+            ) : (
+                <div className={styles["inventory-table"]}>
+                    <div className={styles.charts}>
+                        <Charts data={currentRecords} />
+                    </div>
+                    <div className={styles.table}>
                         <table>
                             <thead>
                                 <tr>
@@ -111,25 +106,27 @@ const Table = (props) => {
                                 {currentRecords.map((record) => {
                                     return (
                                         <TableRowData
-                                            key={Math.random().toString()}
+                                            key={record.name}
                                             data={record}
                                         />
                                     );
                                 })}
                             </tbody>
                         </table>
-                    )}
+                    </div>
                 </div>
-            </div>
-            <div className={styles.paginate}>
-                <Pagination
-                    noOfPages={nPages}
-                    currPage={currentPage}
-                    setCurrPage={setPageHandller}
-                    className={styles["page-holder"]}
-                />
-            </div>
-        </React.Fragment>
+            )}
+            {currentRecords.length && (
+                <div className={styles.paginate}>
+                    <Pagination
+                        noOfPages={noOfPages}
+                        currPage={currentPage}
+                        setCurrPage={(pageNo) => setCurrentPage(pageNo)}
+                        className={styles["page-holder"]}
+                    />
+                </div>
+            )}
+        </>
     );
 };
 
